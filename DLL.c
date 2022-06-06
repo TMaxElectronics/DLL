@@ -6,20 +6,38 @@
 #include <stdint.h>
 
 #include "DLL.h"
+#include "portable.h"
 
 typedef struct{
     uint32_t nextUID;
 } HeadData;
 
-DLLObject * createNewDll(){
-    DLLObject * head = malloc(sizeof(DLLObject));
-    HeadData * headData = malloc(sizeof(HeadData));
+DLLObject * DLL_create(){
+    DLLObject * head = pvPortMalloc(sizeof(DLLObject));
+    HeadData * headData = pvPortMalloc(sizeof(HeadData));
     headData->nextUID = 0;
     head->uid = 0;
     head->data = (void*) headData;
     head->next = head;
     head->prev = head;
     return head;
+}
+
+//LEAKY IF THE LIST CONTAINS ITEMS!!!
+void DLL_free(DLLObject * listHead){
+    DLL_clear(listHead);
+    vPortFree(listHead->data);
+    vPortFree(listHead);
+}
+
+uint32_t DLL_length(DLLObject * listHead){
+    DLLObject * currObj = listHead->next;
+    uint32_t count = 0;
+    while(currObj != listHead){
+        count ++;
+        currObj = currObj->next;
+    }
+    return count;
 }
 
 void DLL_clear(DLLObject * listHead){
@@ -31,8 +49,9 @@ void DLL_clear(DLLObject * listHead){
 }
 
 uint32_t DLL_add(void * data, DLLObject * listHead){
+    if(data == 0) return 0;
     //allocate memory for new object
-    DLLObject * newObject = malloc(sizeof(DLLObject));
+    DLLObject * newObject = pvPortMalloc(sizeof(DLLObject));
     
     //relink objects
     listHead->prev->next = newObject;
@@ -81,14 +100,18 @@ unsigned DLL_isEmpty(DLLObject * listHead){
 }*/
 
 void DLL_remove(DLLObject * target){
-    
     target->prev->next = target->next;
     target->next->prev = target->prev;
-    free(target);
+    vPortFree(target);
 }
 
-void DLL_pop(DLLObject * listHead){
+void* DLL_pop(DLLObject * listHead){
+    if(listHead->next == listHead){
+        return NULL;
+    }
+    void* ret = listHead->next->data;
     DLL_remove(listHead->next);
+    return ret;
 }
 
 void DLL_moveToEnd(DLLObject * currObject, DLLObject * listHead){
