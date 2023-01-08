@@ -6,6 +6,8 @@
 
 typedef struct _DLLObject_ DLLObject;
 
+#define DLL_FOREACH(VARIABLE, LIST) DLLObject * VARIABLE = LIST; while((VARIABLE = VARIABLE->next) != LIST)
+
 /*
  * Creates a new doubly linked list
  *  
@@ -19,6 +21,7 @@ void * findListEntryUID(uint32_t uid, DLLObject * listHead);
 unsigned DLL_isEmpty(DLLObject * listHead);
 void removeListEntryUID(uint32_t targetUID, DLLObject * listHead);
 void DLL_remove(DLLObject * target);
+void DLL_removeData(void * dataPtr, DLLObject * listHead);
 void* DLL_pop(DLLObject * listHead);
 void DLL_dump(DLLObject * listHead);
 void DLL_moveToEnd(DLLObject * currObject, DLLObject * listHead);

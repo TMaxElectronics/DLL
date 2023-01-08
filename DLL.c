@@ -90,14 +90,10 @@ unsigned DLL_isEmpty(DLLObject * listHead){
     return listHead->next == listHead;
 }
 
-/*void removeListEntry(void * targetDataPtr, DLLObject * listHead){
-    DLLObject * currObject = listHead->next;
-    while(currObject->data != targetDataPtr){
-        currObject = currObject.next;
-        if(currObject == listHead) return;
-    }
-    removeListEntry(currObject);
-}*/
+void DLL_removeData(void * dataPtr, DLLObject * listHead){
+    DLLObject * target = DLL_find(dataPtr, listHead);
+    DLL_remove(target);
+}
 
 void DLL_remove(DLLObject * target){
     target->prev->next = target->next;
