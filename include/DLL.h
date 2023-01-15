@@ -14,6 +14,7 @@ typedef struct _DLLObject_ DLLObject;
  * returns the new list's head object
  */
 DLLObject * DLL_create();
+void DLL_clear(DLLObject * listHead);
 void DLL_free(DLLObject * listHead);
 uint32_t DLL_length(DLLObject * listHead);
 uint32_t DLL_add(void * data, DLLObject * listHead);
