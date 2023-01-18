@@ -66,13 +66,13 @@ uint32_t DLL_add(void * data, DLLObject * listHead){
     return newObject->uid;
 }
 
-void * DLL_find(void * dataPtr, DLLObject * listHead){
+DLLObject * DLL_find(void * dataPtr, DLLObject * listHead){
     DLLObject * currObject = listHead->next;
     while(currObject != listHead){
-        if(currObject->data == dataPtr) return currObject->data; //target object found
+        if(currObject->data == dataPtr) return currObject; //target object found
         currObject = currObject->next;
     }
-    return 0; //object not found
+    return NULL; //object not found
 }
 
 void * DLL_get(uint16_t index, DLLObject * listHead){
@@ -92,7 +92,7 @@ unsigned DLL_isEmpty(DLLObject * listHead){
 
 void DLL_removeData(void * dataPtr, DLLObject * listHead){
     DLLObject * target = DLL_find(dataPtr, listHead);
-    DLL_remove(target);
+    if(target != NULL) DLL_remove(target);
 }
 
 void DLL_remove(DLLObject * target){
