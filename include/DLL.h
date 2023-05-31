@@ -6,6 +6,13 @@
 
 typedef struct _DLLObject_ DLLObject;
 
+/*
+ * WARNING:
+ * 
+ * the DLL_FOREACH function is NOT deletion during loop safe. If the current entry gets deleted while the loop is running there will be a free'd memory access
+ * 
+ * If that feature is absolutely necessary you can, as a workaround, implement the loop yourself, keeping the above problem in mind.
+ */
 #define DLL_FOREACH(VARIABLE, LIST) DLLObject * VARIABLE = LIST; while((VARIABLE = VARIABLE->next) != LIST)
 
 /*
